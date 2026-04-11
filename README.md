@@ -12,7 +12,7 @@
 
 ## 🌍 Live Demo
 
-👉 **https://travellust.onrender.com**
+👉 https://travellust-c2wy.onrender.com
 
 ---
 
