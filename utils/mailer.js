@@ -1,18 +1,12 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Welcome email after signup
 module.exports.sendWelcomeEmail = async (userEmail, username) => {
   try {
-    await transporter.sendMail({
-      from: `"Travellust ✈️" <${process.env.EMAIL}>`,
+    await resend.emails.send({
+      from: "Travellust <onboarding@resend.dev>",
       to: userEmail,
       subject: "Welcome to Travellust! 🎉",
       html: `
@@ -30,7 +24,7 @@ module.exports.sendWelcomeEmail = async (userEmail, username) => {
               <li>⭐ Leave reviews</li>
               <li>🏡 List your own property</li>
             </ul>
-            <a href="http://localhost:8080/listings" 
+            <a href="https://travellust-c2wy.onrender.com/listings" 
                style="background:#fe424d; color:white; padding:0.75rem 2rem; border-radius:25px; text-decoration:none; display:inline-block; margin-top:1rem;">
               Start Exploring 🚀
             </a>
@@ -50,8 +44,8 @@ module.exports.sendWelcomeEmail = async (userEmail, username) => {
 // New listing email
 module.exports.sendListingEmail = async (userEmail, username, listing) => {
   try {
-    await transporter.sendMail({
-      from: `"Travellust ✈️" <${process.env.EMAIL}>`,
+    await resend.emails.send({
+      from: "Travellust <onboarding@resend.dev>",
       to: userEmail,
       subject: "Your listing is live on Travellust! 🏠",
       html: `
@@ -68,7 +62,7 @@ module.exports.sendListingEmail = async (userEmail, username, listing) => {
               <p>💰 ₹${listing.price}/night</p>
               <p>📝 ${listing.description}</p>
             </div>
-            <a href="http://localhost:8080/listings" 
+            <a href="https://travellust-c2wy.onrender.com/listings" 
                style="background:#fe424d; color:white; padding:0.75rem 2rem; border-radius:25px; text-decoration:none; display:inline-block; margin-top:1rem;">
               View Your Listing 🚀
             </a>
