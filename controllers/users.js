@@ -11,12 +11,16 @@ module.exports.signup = async (req, res, next) => {
     const newUser = new User({ email, username });
     const registeredUser = await User.register(newUser, password);
 
-    // Send welcome email
-    await mailer.sendWelcomeEmail(email, username);
+    // Send welcome email (won't crash signup if it fails)
+    try {
+      await mailer.sendWelcomeEmail(email, username);
+    } catch (mailErr) {
+      console.log("Email error:", mailErr.message);
+    }
 
     req.login(registeredUser, (err) => {
       if (err) return next(err);
-      req.flash("success", "Welcome to Wanderlust!");
+      req.flash("success", "Welcome to Travellust!");
       res.redirect("/listings");
     });
   } catch (e) {
@@ -30,7 +34,7 @@ module.exports.renderLoginForm = (req, res) => {
 };
 
 module.exports.login = async (req, res) => {
-  req.flash("success", "Welcome back to wanderlust!");
+  req.flash("success", "Welcome back to Travellust!");
   let redirectUrl = res.locals.redirectUrl || "/listings";
   res.redirect(redirectUrl);
 };
