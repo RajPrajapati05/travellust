@@ -1,12 +1,20 @@
-const { Resend } = require("resend");
+const nodemailer = require("nodemailer");
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
 
 // Welcome email after signup
 module.exports.sendWelcomeEmail = async (userEmail, username) => {
   try {
-    await resend.emails.send({
-      from: "Travellust <onboarding@resend.dev>",
+    await transporter.sendMail({
+      from: `"Travellust ✈️" <${process.env.EMAIL}>`,
       to: userEmail,
       subject: "Welcome to Travellust! 🎉",
       html: `
@@ -17,7 +25,6 @@ module.exports.sendWelcomeEmail = async (userEmail, username) => {
           <div style="background: #f9f9f9; padding: 2rem; border-radius: 0 0 8px 8px;">
             <h2>Hi ${username}! 👋</h2>
             <p>Welcome to Travellust — your home for amazing travel stays!</p>
-            <p>You can now:</p>
             <ul>
               <li>🏠 Browse thousands of listings</li>
               <li>📍 Find places by location</li>
@@ -37,15 +44,15 @@ module.exports.sendWelcomeEmail = async (userEmail, username) => {
     });
     console.log("Welcome email sent to:", userEmail);
   } catch (err) {
-    console.error("Email error:", err.message);
+    console.error("Email error:", err);
   }
 };
 
 // New listing email
 module.exports.sendListingEmail = async (userEmail, username, listing) => {
   try {
-    await resend.emails.send({
-      from: "Travellust <onboarding@resend.dev>",
+    await transporter.sendMail({
+      from: `"Travellust ✈️" <${process.env.EMAIL}>`,
       to: userEmail,
       subject: "Your listing is live on Travellust! 🏠",
       html: `
@@ -75,6 +82,6 @@ module.exports.sendListingEmail = async (userEmail, username, listing) => {
     });
     console.log("Listing email sent to:", userEmail);
   } catch (err) {
-    console.error("Email error:", err.message);
+    console.error("Email error:", err);
   }
 };
